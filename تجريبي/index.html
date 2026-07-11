@@ -20,7 +20,7 @@
             color: #333;
         }
 
-        /* --- 2. شريط التنقل العلوي (Navbar) --- */
+        /* --- 2. شريط التنقل العلوي (Navbar) المطور --- */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -42,7 +42,8 @@
 
         .nav-tabs {
             display: flex;
-            gap: 20px;
+            gap: 15px;
+            align-items: center;
         }
 
         .tab-btn {
@@ -60,6 +61,22 @@
         .tab-btn:hover, .tab-btn.active {
             background-color: #1565c0;
             color: #ffeb3b; 
+        }
+
+        /* زر البث المباشر المميز في الشريط العلوي */
+        .live-tab-btn {
+            background-color: #d32f2f;
+            animation: pulse-border 2s infinite;
+        }
+        .live-tab-btn:hover, .live-tab-btn.active {
+            background-color: #b71c1c;
+            color: white;
+        }
+
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(211, 47, 47, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
         }
 
         .nav-actions {
@@ -94,52 +111,7 @@
             font-size: 14px;
         }
 
-        /* --- 3. البنر الرئيسي لشاشة الترحيب والبث --- */
-        .hero {
-            background: linear-gradient(135px, #0d47a1 0%, #1565c0 100%);
-            color: white;
-            text-align: center;
-            padding: 40px 20px;
-            box-shadow: inset 0 -10px 20px rgba(0,0,0,0.05);
-        }
-
-        .hero h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-
-        .stream-container {
-            max-width: 600px;
-            margin: 20px auto 0 auto;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-            border: 3px solid #ffeb3b;
-            background-color: #000;
-        }
-
-        .stream-container video {
-            width: 100%;
-            display: block;
-        }
-
-        .stream-badge {
-            background: #d32f2f;
-            color: white;
-            padding: 4px 12px;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-            border-radius: 4px;
-            margin-bottom: 5px;
-            animation: blink 1.5s infinite;
-        }
-
-        @keyframes blink {
-            0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; }
-        }
-
-        /* --- 4. تصميم الصفحة الرئيسية --- */
+        /* --- 3. تصميم الصفحة الرئيسية ومحتوياتها --- */
         .main-container {
             max-width: 1200px;
             margin: 30px auto;
@@ -148,7 +120,7 @@
 
         .categories-home-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
             margin-top: 20px;
         }
@@ -172,24 +144,66 @@
 
         .portal-img {
             width: 100%;
-            height: 250px;
+            height: 220px;
             object-fit: cover;
         }
 
         .portal-info {
-            padding: 25px;
+            padding: 20px;
             background: white;
         }
 
         .portal-info h2 {
-            font-size: 26px;
+            font-size: 22px;
             color: #0d47a1;
             margin-bottom: 10px;
         }
 
         .portal-info p {
             color: #666;
-            font-size: 15px;
+            font-size: 14px;
+        }
+
+        /* --- 4. تصميم مشغل البث المباشر داخل صفحته الخاصة --- */
+        .stream-page-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .stream-container {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            border: 3px solid #ffeb3b;
+            background-color: #000;
+            margin-top: 15px;
+        }
+
+        .stream-container video {
+            width: 100%;
+            display: block;
+        }
+
+        .stream-badge {
+            background: #d32f2f;
+            color: white;
+            padding: 6px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; }
         }
 
         /* --- 5. صفحات الأقسام الداخلية --- */
@@ -378,7 +392,7 @@
             background-color: #43a047;
         }
 
-        /* --- 7. قسم استعراض الفاتورة على الشاشة العادية --- */
+        /* --- 7. قسم استعراض الفاتورة والطباعة --- */
         #invoice-section {
             display: none;
             background: white;
@@ -387,10 +401,9 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             max-width: 700px;
             margin: 30px auto;
-            border: 3px solid #000000; /* إطار أسود واضح */
+            border: 3px solid #000000;
         }
 
-        /* جعل الخطوط والنصوص بالكامل باللون الأسود لتفادي مشاكل خيار الطباعة أبيض وأسود */
         #invoice-section, 
         #invoice-section * {
             color: #000000 !important;
@@ -447,15 +460,13 @@
             font-size: 16px;
         }
 
-        /* --- 🛠️ 8. تعديل الطباعة الذكي والآمن لمنع اختفاء الجدول 🛠️ --- */
+        /* --- 8. خصائص الطباعة --- */
         @media print {
-            /* إخفاء الأقسام الخارجية المحددة فقط بدلاً من الكل لتجنب حجب الجدول */
-            .navbar, .hero, .main-container > #page-home, .main-container > #page-electronics, .main-container > #page-clothing, footer, .print-btn, .invoice-close-btn, .back-btn {
+            .navbar, footer, .print-btn, .invoice-close-btn, .back-btn, .page-section {
                 display: none !important;
                 visibility: hidden !important;
             }
 
-            /* تهيئة الفاتورة لتأخذ الصفحة بالكامل وتثبيت عرضها */
             #invoice-section {
                 display: block !important;
                 visibility: visible !important;
@@ -467,31 +478,10 @@
                 box-shadow: none !important;
             }
 
-            /* فرض ظهور نصوص الفاتورة والجدول والموديلات والأسعار باللون الأسود الكامل */
-            #invoice-section * {
-                visibility: visible !important;
-                color: #000000 !important;
-                border-color: #000000 !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-
-            /* إجبار هيكل الجدول على المحاذاة والظهور التام */
             .invoice-details-table {
                 display: table !important;
                 width: 100% !important;
                 border-collapse: collapse !important;
-            }
-
-            .invoice-details-table tr {
-                display: table-row !important;
-            }
-
-            .invoice-details-table th, 
-            .invoice-details-table td {
-                display: table-cell !important;
-                border: 2px solid #000000 !important;
-                padding: 10px !important;
             }
         }
 
@@ -510,9 +500,10 @@
     <nav class="navbar">
         <div class="logo">🛍️ GLAKTARBO</div>
         <div class="nav-tabs">
-            <button class="tab-btn active" onclick="showPage('home')">الرئيسية</button>
-            <button class="tab-btn" onclick="showPage('electronics')">الأجهزة الإلكترونية</button>
-            <button class="tab-btn" onclick="showPage('clothing')">الملابس والحقائب</button>
+            <button class="tab-btn active" id="btn-home" onclick="showPage('home')">الرئيسية</button>
+            <button class="tab-btn" id="btn-electronics" onclick="showPage('electronics')">الأجهزة الإلكترونية</button>
+            <button class="tab-btn live-tab-btn" id="btn-live" onclick="showPage('live')">🔴 بث مباشر</button>
+            <button class="tab-btn" id="btn-clothing" onclick="showPage('clothing')">الملابس والحقائب</button>
         </div>
         <div class="nav-actions">
             <button class="cart-btn" onclick="openCartModal()">
@@ -521,23 +512,10 @@
         </div>
     </nav>
 
-    <header class="hero">
-        <h1>مرحباً بك في منصة البث والتسوق الذكي</h1>
-        <p>شاهد استعراض المنتجات لايف وسجل طلبك فوراً</p>
-        
-        <div class="stream-container">
-            <div class="stream-badge">🔴 بث مباشر من المختبر</div>
-            <video id="live-player" controls autoplay muted loop poster="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600">
-                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
-                متصفحك لا يدعم تشغيل البث المباشر.
-            </video>
-        </div>
-    </header>
-
     <main class="main-container">
 
         <section id="page-home" class="page-section active-page">
-            <h2 style="text-align: center; margin-bottom: 20px; color: #0d47a1;">اختر القسم المفضل للتسوق</h2>
+            <h2 style="text-align: center; margin-bottom: 30px; color: #0d47a1;">اختر القسم المفضل للتسوق</h2>
             <div class="categories-home-grid">
                 
                 <div class="category-portal-card" onclick="showPage('electronics')">
@@ -545,6 +523,14 @@
                     <div class="portal-info">
                         <h2>قسم الأجهزة الإلكترونية</h2>
                         <p>تصفح أحدث أجهزة اللابتوب، الهواتف الذكية، والساعات الرقمية المتطورة.</p>
+                    </div>
+                </div>
+
+                <div class="category-portal-card" onclick="showPage('live')" style="border: 2px dashed #d32f2f;">
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600" class="portal-img" alt="البث المباشر">
+                    <div class="portal-info">
+                        <h2 style="color: #d32f2f;">🔴 غرفة البث المباشر اللايف</h2>
+                        <p>ادخل وشاهد مراجعات المنتجات الحية وتفاعل معنا فوراً.</p>
                     </div>
                 </div>
 
@@ -565,21 +551,35 @@
                 <button class="back-btn" onclick="showPage('home')">⬅️ العودة للرئيسية</button>
             </div>
             <div class="products-grid">
-                
                 <div class="product-card">
                     <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400" class="product-img" alt="لابتوب">
                     <div class="product-title">حاسوب محمول HP Envy فائق الأداء</div>
                     <div class="product-price">$ 1200</div>
                     <button class="add-btn" onclick="addToCart('حاسوب محمول HP Envy', 1200)">إضافة إلى السلة 🛒</button>
                 </div>
-
                 <div class="product-card">
                     <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" class="product-img" alt="ساعة رقمية">
                     <div class="product-title">ساعة ذكية مقاومة للماء</div>
                     <div class="product-price">$ 250</div>
                     <button class="add-btn" onclick="addToCart('ساعة ذكية متطورة', 250)">إضافة إلى السلة 🛒</button>
                 </div>
+            </div>
+        </section>
 
+        <section id="page-live" class="page-section">
+            <div class="section-header">
+                <h2>📺 منصة البث المباشر التفاعلية</h2>
+                <button class="back-btn" onclick="showPage('home')">⬅️ العودة للرئيسية</button>
+            </div>
+            <div class="stream-page-container">
+                <div class="stream-badge">🔴 بث حي مباشر من قنوات GLAKTARBO</div>
+                <p style="color: #666; margin-bottom: 10px;">استمتع بمشاهدة عروض المنتجات والخصومات الحصرية المسجلة واللايف</p>
+                <div class="stream-container">
+                    <video id="live-player" controls autoplay muted loop poster="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600">
+                        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                        متصفحك لا يدعم تشغيل البث المباشر.
+                    </video>
+                </div>
             </div>
         </section>
 
@@ -589,21 +589,18 @@
                 <button class="back-btn" onclick="showPage('home')">⬅️ العودة للرئيسية</button>
             </div>
             <div class="products-grid">
-                
                 <div class="product-card">
                     <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400" class="product-img" alt="شنطة ظهر">
                     <div class="product-title">حقيبة ظهر ذكية مقاومة للسرقة والماء</div>
                     <div class="product-price">$ 85</div>
                     <button class="add-btn" onclick="addToCart('حقيبة ظهر ذكية', 85)">إضافة إلى السلة 🛒</button>
                 </div>
-
                 <div class="product-card">
                     <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400" class="product-img" alt="جاكيت">
                     <div class="product-title">جاكيت شتوي عصري فاخر</div>
                     <div class="product-price">$ 150</div>
                     <button class="add-btn" onclick="addToCart('جاكيت شتوي فاخر', 150)">إضافة إلى السلة 🛒</button>
                 </div>
-
             </div>
         </section>
 
@@ -627,8 +624,7 @@
                         <th>الإجمالي</th>
                     </tr>
                 </thead>
-                <tbody id="invoice-table-body">
-                    </tbody>
+                <tbody id="invoice-table-body"></tbody>
             </table>
             
             <h3 style="text-align: left; margin-top: 20px; font-size: 20px;">الإجمالي الكلي: $ <span id="invoice-total">0</span></h3>
@@ -647,11 +643,9 @@
                 <h2>🛒 محتويات سلة التسوق الحالية</h2>
                 <span class="close-btn" onclick="closeCartModal()">&times;</span>
             </div>
-            
             <div id="cart-items-list">
                 <p style="text-align: center; color: #888; padding: 20px;">السلة فارغة حالياً!</p>
             </div>
-            
             <div class="checkout-form">
                 <h3>📋 بيانات الشحن وإصدار الفاتورة</h3>
                 <div class="form-group">
@@ -679,19 +673,24 @@
         let cart = [];
 
         function showPage(pageId) {
+            // إخفاء كل الصفحات
             document.querySelectorAll('.page-section').forEach(section => {
                 section.classList.remove('active-page');
             });
+            // إظهار الصفحة المطلوبة فقط
             document.getElementById('page-' + pageId).classList.add('active-page');
 
+            // إزالة الكلاس النشط من كل الأزرار
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            
-            if(event && event.target && event.target.classList.contains('tab-btn')) {
-                event.target.classList.add('active');
+            // إضافة الكلاس النشط للزر المختار
+            const activeBtn = document.getElementById('btn-' + pageId);
+            if(activeBtn) {
+                activeBtn.classList.add('active');
             }
             
+            // إخفاء قسم الفاتورة عند التنقل
             document.getElementById('invoice-section').style.display = 'none';
         }
 
@@ -802,7 +801,7 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('service-worker.js')
-                .then(reg => console.log('PWA Service Worker تم تسجيله!'))
+                .then(reg => console.log('PWA Service Worker Registered'))
                 .catch(err => console.error(err));
             });
         }
