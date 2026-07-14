@@ -1,11 +1,10 @@
-const CACHE_NAME = 'glaktarbo-v1';
+const CACHE_NAME = 'glaktarbo-v2';
 const ASSETS_TO_CACHE = [
   'index.html',
   'manifest.json',
-  'icons/icon-192-v2.png' // تم تعديل المسار والاسم هنا ليطابق مجلدك الحقيقي
+  'icons/192-v2.png'
 ];
 
-// السيرفس وركر وحفظ الملفات في الكاش
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -15,7 +14,6 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// تفعيل وتنظيف الكاش
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -31,7 +29,6 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// جلب الملفات
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {

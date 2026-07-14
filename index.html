@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر GLAKTARBO المتكامل</title>
+    <title>GLAKTARBO</title>
     <link rel="manifest" href="manifest.json">
     
     <style>
@@ -447,7 +447,7 @@
             margin: 15px 0;
         }
         .coupon-input {
-            flex: 1;
+            width: 100%;
             padding: 8px;
             border: 1px dashed var(--border-color);
             border-radius: 5px;
@@ -465,6 +465,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
+            min-width: 100px;
         }
 
         /* --- 7. قسم استعراض الفاتورة والطباعة --- */
@@ -823,6 +824,7 @@
                 discountType = null;
                 discountValue = 0;
             }
+            renderCartItems();
         }
 
         function showPage(pageId) {
@@ -904,6 +906,7 @@
             }
         }
 
+        // دالة إصدار الفاتورة المكتملة والمجربة بنجاح
         function generateInvoice() {
             const name = document.getElementById('client-name').value.trim();
             const phone = document.getElementById('client-phone').value.trim();
@@ -918,70 +921,83 @@
                 return;
             }
 
-            closeCartModal();
-
-            document.getElementById('invoice-date').innerText = new Date().toLocaleString('ar-EG');
+            // كتابة بيانات العميل في قسم الفاتورة
             document.getElementById('inv-name').innerText = name;
             document.getElementById('inv-phone').innerText = phone;
             document.getElementById('inv-location').innerText = location;
 
-            const tableBody = document.getElementById('invoice-table-body');
-            tableBody.innerHTML = '';
-            let rawTotal = 0;
+            // تحديد التاريخ والوقت تلقائياً في الفاتورة
+            const today = new Date();
+            document.getElementById('invoice-date').innerText = today.toLocaleDateString('ar-EG') + " " + today.toLocaleTimeString('ar-EG');
 
-            cart.forEach(item => {
-                let itemTotal = item.price * item.quantity;
-                rawTotal += itemTotal;
-                tableBody.innerHTML += `
-                    <tr>
-                        <td>${item.name}</td>
-                        <td>$ ${item.price}</td>
-                        <td>${item.quantity}</td>
-                        <td>$ ${itemTotal}</td>
-                    </tr>
-                `;
-            });
+            // حساب الإجمالي
+            let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            let finalTotal = subtotal;
 
-            // حساب الخصم الفعلي ومطابقته للإجمالي
-            let finalTotal = rawTotal;
-            let discountRow = document.getElementById('inv-discount-row');
-            let discountValSpan = document.getElementById('inv-discount-val');
-
-            if (discountType === 'fixed' && discountValue > 0) {
-                finalTotal = rawTotal - discountValue;
-                if (finalTotal < 0) finalTotal = 0;
+            const discountRow = document.getElementById('inv-discount-row');
+            if (discountType === 'fixed') {
+                finalTotal = Math.max(0, subtotal - discountValue);
                 discountRow.style.display = 'block';
-                discountValSpan.innerText = `$${discountValue} (كود GLAK50)`;
-            } else if (discountType === 'percent' && discountValue > 0) {
-                let calculatedDiscount = (rawTotal * discountValue) / 100;
-                finalTotal = rawTotal - calculatedDiscount;
+                document.getElementById('inv-discount-val').innerText = `$${discountValue} خصم مباشر`;
+            } else if (discountType === 'percent') {
+                finalTotal = subtotal - (subtotal * (discountValue / 100));
                 discountRow.style.display = 'block';
-                discountValSpan.innerText = `${discountValue}% (خصم $${calculatedDiscount.toFixed(2)}) (كود TARBO10)`;
+                document.getElementById('inv-discount-val').innerText = `${discountValue}% خصم النسبة`;
             } else {
                 discountRow.style.display = 'none';
             }
 
-            document.getElementById('invoice-total').innerText = finalTotal.toFixed(2);
+            // بناء جدول الفاتورة
+            const tableBody = document.getElementById('invoice-table-body');
+            tableBody.innerHTML = '';
+            cart.forEach(item => {
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>$${item.price}</td>
+                        <td>${item.quantity}</td>
+                        <td>$${item.price * item.quantity}</td>
+                    </tr>
+                `;
+            });
 
-            const invoiceSection = document.getElementById('invoice-section');
-            invoiceSection.style.display = 'block';
-            invoiceSection.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('invoice-total').innerText = finalTotal;
+
+            // إغلاق المودال وعرض الفاتورة على الشاشة بشكل فخم
+            closeCartModal();
+            
+            // إخفاء الأقسام وعرض صفحة الفاتورة
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active-page');
+            });
+            document.getElementById('invoice-section').style.display = 'block';
         }
 
+        // دالة إغلاق الفاتورة وتصفير السلة
         function closeInvoice() {
             document.getElementById('invoice-section').style.display = 'none';
+            // تفريغ السلة بعد نجاح الشراء
+            cart = [];
+            discountType = null;
+            discountValue = 0;
+            updateCartCounter();
+            document.getElementById('client-name').value = '';
+            document.getElementById('client-phone').value = '';
+            document.getElementById('client-location').value = '';
+            document.getElementById('coupon-code').value = '';
+            document.getElementById('coupon-message').innerText = '';
+            showPage('home');
         }
-        
+    </script>
 
-<!-- انسخ الكود اللي تحت دا وحطه قبل قفلة الـ body مباشرة -->
-
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(reg => console.log('PWA Service Worker Registered Successfully!', reg))
-        .catch(err => console.error('Service Worker Registration Failed:', err));
-    });
-  }
-</script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('PWA Service Worker Registered Successfully!', reg))
+                    .catch(err => console.error('Service Worker Registration Failed:', err));
+            });
+        }
+    </script>
 </body>
 </html>
