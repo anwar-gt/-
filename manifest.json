@@ -1,0 +1,28 @@
+{
+  "name": "My First PWA",
+  "short_name": "MyPWA",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2196f3",
+  "icons": [
+  {
+    "src": "icons/icon-192.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  }
+],
+"screenshots": [
+  {
+    "src": "screenshots/desktop.png",
+    "sizes": "1918x1076",
+    "type": "image/png",
+    "form_factor": "wide"
+  },
+  {
+    "src": "screenshots/mobile.png",
+    "sizes": "896x1195",
+    "type": "image/png"
+  }
+]
+}
