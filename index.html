@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر GLAKTARBO المتكامل</title>
+    <link rel="manifest" href="manifest.json">
+    
+    <style>
+        /* --- 1. التنسيقات العامة للموقع --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        /* --- 2. شريط التنقل العلوي (Navbar) المطور --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0d47a1; 
+            padding: 15px 5%;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .tab-btn:hover, .tab-btn.active {
+            background-color: #1565c0;
+            color: #ffeb3b; 
+        }
+
+        /* زر البث المباشر المميز في الشريط العلوي */
+        .live-tab-btn {
+            background-color: #d32f2f;
+            animation: pulse-border 2s infinite;
+        }
+        .live-tab-btn:hover, .live-tab-btn.active {
+            background-color: #b71c1c;
+            color: white;
+        }
+
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(211, 47, 47, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .cart-btn {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .cart-btn:hover {
+            background: #e65100;
+        }
+
+        .cart-count {
+            background-color: white;
+            color: #e65100;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 14px;
+        }
+
+        /* --- 3. تصميم الصفحة الرئيسية ومحتوياتها --- */
+        .main-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .categories-home-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .category-portal-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: 0.4s;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+
+        .category-portal-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(13, 71, 161, 0.2);
+            border-color: #1565c0;
+        }
+
+        .portal-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .portal-info {
+            padding: 20px;
+            background: white;
+        }
+
+        .portal-info h2 {
+            font-size: 22px;
+            color: #0d47a1;
+            margin-bottom: 10px;
+        }
+
+        .portal-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* --- 4. تصميم مشغل البث المباشر داخل صفحته الخاصة --- */
+        .stream-page-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .stream-container {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            border: 3px solid #ffeb3b;
+            background-color: #000;
+            margin-top: 15px;
+        }
+
+        .stream-container video {
+            width: 100%;
+            display: block;
+        }
+
+        .stream-badge {
+            background: #d32f2f;
+            color: white;
+            padding: 6px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; }
+        }
+
+        /* --- 5. صفحات الأقسام الداخلية --- */
+        .page-section {
+            display: none; 
+        }
+
+        .page-section.active-page {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #0d47a1;
+            padding-bottom: 10px;
+        }
+
+        .back-btn {
+            background-color: #78909c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid #e0e0e0;
+            transition: 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .product-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .product-price {
+            font-size: 20px;
+            color: #e53935;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .add-btn {
+            background-color: #0d47a1;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+        }
+
+        .add-btn:hover {
+            background-color: #1565c0;
+        }
+
+        /* --- 6. نافذة السلة التفاعلية (Modal) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .close-btn {
+            font-size: 28px;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .checkout-form {
+            margin-top: 20px;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .checkout-form h3 {
+            margin-bottom: 12px;
+            color: #0d47a1;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .invoice-action-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .invoice-action-btn:hover {
+            background-color: #43a047;
+        }
+
+        /* --- 7. قسم استعراض الفاتورة والطباعة --- */
+        #invoice-section {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            max-width: 700px;
+            margin: 30px auto;
+            border: 3px solid #000000;
+        }
+
+        #invoice-section, 
+        #invoice-section * {
+            color: #000000 !important;
+            border-color: #000000 !important;
+        }
+
+        .invoice-header {
+            text-align: center;
+            border-bottom: 3px solid #000000;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .invoice-details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .invoice-details-table th, 
+        .invoice-details-table td {
+            border: 2px solid #000000 !important;
+            padding: 12px;
+            text-align: right;
+            font-size: 16px;
+        }
+
+        .invoice-details-table th {
+            background-color: #eaeaea !important; 
+        }
+
+        .print-btn {
+            background-color: #000000 !important;
+            color: white !important;
+            border: none !important;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 16px;
+        }
+
+        .invoice-close-btn {
+            background-color: #555555 !important;
+            color: white !important;
+            border: none !important;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        /* --- 8. خصائص الطباعة --- */
+        @media print {
+            .navbar, footer, .print-btn, .invoice-close-btn, .back-btn, .page-section {
+                display: none !important;
+                visibility: hidden !important;
+            }
+
+            #invoice-section {
+                display: block !important;
+                visibility: visible !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                border: 2px solid #000000 !important;
+                padding: 10px !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+            }
+
+            .invoice-details-table {
+                display: table !important;
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+        }
+
+        footer {
+            background-color: #1a1a1a;
+            color: #aaa;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">🛍️ GLAKTARBO</div>
+        <div class="nav-tabs">
+            <button class="tab-btn active" id="btn-home" onclick="showPage('home')">الرئيسية</button>
+            <button class="tab-btn" id="btn-electronics" onclick="showPage('electronics')">الأجهزة الإلكترونية</button>
+            <button class="tab-btn live-tab-btn" id="btn-live" onclick="showPage('live')">🔴 بث مباشر</button>
+            <button class="tab-btn" id="btn-clothing" onclick="showPage('clothing')">الملابس والحقائب</button>
+        </div>
+        <div class="nav-actions">
+            <button class="cart-btn" onclick="openCartModal()">
+                🛒 سلة المشتريات <span class="cart-count" id="cart-counter">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="main-container">
+
+        <section id="page-home" class="page-section active-page">
+            <h2 style="text-align: center; margin-bottom: 30px; color: #0d47a1;">اختر القسم المفضل للتسوق</h2>
+            <div class="categories-home-grid">
+                
+                <div class="category-portal-card" onclick="showPage('electronics')">
+                    <img src="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=600" class="portal-img" alt="الأجهزة الإلكترونية">
+                    <div class="portal-info">
+                        <h2>قسم الأجهزة الإلكترونية</h2>
+                        <p>تصفح أحدث أجهزة اللابتوب، الهواتف الذكية، والساعات الرقمية المتطورة.</p>
+                    </div>
+                </div>
+
+                <div class="category-portal-card" onclick="showPage('live')" style="border: 2px dashed #d32f2f;">
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600" class="portal-img" alt="البث المباشر">
+                    <div class="portal-info">
+                        <h2 style="color: #d32f2f;">🔴 غرفة البث المباشر اللايف</h2>
+                        <p>ادخل وشاهد مراجعات المنتجات الحية وتفاعل معنا فوراً.</p>
+                    </div>
+                </div>
+
+                <div class="category-portal-card" onclick="showPage('clothing')">
+                    <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600" class="portal-img" alt="الملابس والحقائب">
+                    <div class="portal-info">
+                        <h2>قسم الملابس والحقائب</h2>
+                        <p>اكتشف تشكيلتنا العصرية من الملابس الجاهزة، الشنط الفاخرة، والإكسسوارات.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="page-electronics" class="page-section">
+            <div class="section-header">
+                <h2>💻 الأجهزة الإلكترونية الخاصة</h2>
+                <button class="back-btn" onclick="showPage('home')">⬅️ العودة للرئيسية</button>
+            </div>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400" class="product-img" alt="لابتوب">
+                    <div class="product-title">حاسوب محمول HP Envy فائق الأداء</div>
+                    <div class="product-price">$ 1200</div>
+                    <button class="add-btn" onclick="addToCart('حاسوب محمول HP Envy', 1200)">إضافة إلى السلة 🛒</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" class="product-img" alt="ساعة رقمية">
+                    <div class="product-title">ساعة ذكية مقاومة للماء</div>
+                    <div class="product-price">$ 250</div>
+                    <button class="add-btn" onclick="addToCart('ساعة ذكية متطورة', 250)">إضافة إلى السلة 🛒</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-live" class="page-section">
+            <div class="section-header">
+                <h2>📺 منصة البث المباشر التفاعلية</h2>
+                <button class="back-btn" onclick="showPage('home')">⬅️ العودة للرئيسية</button>
+            </div>
+            <div class="stream-page-container">
+                <div class="stream-badge">🔴 بث حي مباشر من قنوات GLAKTARBO</div>
+                <p style="color: #666; margin-bottom: 10px;">استمتع بمشاهدة عروض المنتجات والخصومات الحصرية المسجلة واللايف</p>
+                <div class="stream-container">
+                   <video id="live-player" controls autoplay muted loop poster="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600">
+    <source src="live.mp4" type="video/mp4">
+
+    متصفحك لا يدعم تشغيل البث المباشر.
+</video> <br><br>
+<video id="live-player" controls autoplay muted loop poster="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600">
+    
+    <source src="0711 (1).mp4" type="video/mp4">
+    متصفحك لا يدعم تشغيل البث المباشر.
+</video>
+<h1>1</h1>
+</video> <br><br>
+<video id="live-player" controls autoplay muted loop poster="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600">
+    
+    <source src="0711 (1)(1).mp4" type="video/mp4">
+    متصفحك لا يدعم تشغيل البث المباشر.
+</video>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-clothing" class="page-section">
+            <div class="section-header">
+                <h2>👜 الملابس والحقائب العصرية</h2>
+                <button class="back-btn" onclick="showPage('home')">⬅️ العودة للرئيسية</button>
+            </div>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400" class="product-img" alt="شنطة ظهر">
+                    <div class="product-title">حقيبة ظهر ذكية مقاومة للسرقة والماء</div>
+                    <div class="product-price">$ 85</div>
+                    <button class="add-btn" onclick="addToCart('حقيبة ظهر ذكية', 85)">إضافة إلى السلة 🛒</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400" class="product-img" alt="جاكيت">
+                    <div class="product-title">جاكيت شتوي عصري فاخر</div>
+                    <div class="product-price">$ 150</div>
+                    <button class="add-btn" onclick="addToCart('جاكيت شتوي فاخر', 150)">إضافة إلى السلة 🛒</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="invoice-section">
+            <div class="invoice-header">
+                <h2>🧾 فاتورة شراء رسمية - GLAKTARBO</h2>
+                <p>تاريخ الفاتورة: <span id="invoice-date"></span></p>
+            </div>
+            <div style="margin-bottom: 20px; line-height: 1.8; font-size: 16px;">
+                <p><strong>اسم العميل:</strong> <span id="inv-name"></span></p>
+                <p><strong>رقم التواصل:</strong> <span id="inv-phone"></span></p>
+                <p><strong>موقع / عنوان العميل:</strong> <span id="inv-location"></span></p>
+            </div>
+            
+            <table class="invoice-details-table">
+                <thead>
+                    <tr>
+                        <th>المنتج / الموديل</th>
+                        <th>السعر الفردي</th>
+                        <th>الكمية</th>
+                        <th>الإجمالي</th>
+                    </tr>
+                </thead>
+                <tbody id="invoice-table-body"></tbody>
+            </table>
+            
+            <h3 style="text-align: left; margin-top: 20px; font-size: 20px;">الإجمالي الكلي: $ <span id="invoice-total">0</span></h3>
+            
+            <center>
+                <button class="print-btn" onclick="window.print()">🖨️ طباعة الفاتورة أو حفظها كـ PDF</button>
+                <button class="invoice-close-btn" onclick="closeInvoice()">إغلاق</button>
+            </center>
+        </section>
+
+    </main>
+
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🛒 محتويات سلة التسوق الحالية</h2>
+                <span class="close-btn" onclick="closeCartModal()">&times;</span>
+            </div>
+            <div id="cart-items-list">
+                <p style="text-align: center; color: #888; padding: 20px;">السلة فارغة حالياً!</p>
+            </div>
+            <div class="checkout-form">
+                <h3>📋 بيانات الشحن وإصدار الفاتورة</h3>
+                <div class="form-group">
+                    <label for="client-name">اسم العميل بالكامل:</label>
+                    <input type="text" id="client-name" placeholder="أدخل اسم العميل ثلاثي">
+                </div>
+                <div class="form-group">
+                    <label for="client-phone">رقم هاتف العميل:</label>
+                    <input type="tel" id="client-phone" placeholder="مثال: 0912345678">
+                </div>
+                <div class="form-group">
+                    <label for="client-location">موقع أو عنوان التوصيل الفعلّي:</label>
+                    <input type="text" id="client-location" placeholder="المدينة، الحي، الشارع">
+                </div>
+                <button class="invoice-action-btn" onclick="generateInvoice()">✅ تأكيد الطلب وإصدار الفاتورة فوراً</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 جميع الحقوق محفوظة - متجر وماركة GLAKTARBO التقدمية</p>
+    </footer>
+
+    <script>
+        let cart = [];
+
+        function showPage(pageId) {
+            // إخفاء كل الصفحات
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active-page');
+            });
+            // إظهار الصفحة المطلوبة فقط
+            document.getElementById('page-' + pageId).classList.add('active-page');
+
+            // إزالة الكلاس النشط من كل الأزرار
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // إضافة الكلاس النشط للزر المختار
+            const activeBtn = document.getElementById('btn-' + pageId);
+            if(activeBtn) {
+                activeBtn.classList.add('active');
+            }
+            
+            // إخفاء قسم الفاتورة عند التنقل
+            document.getElementById('invoice-section').style.display = 'none';
+        }
+
+        function addToCart(name, price) {
+            let existingItem = cart.find(item => item.name === name);
+            if(existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ name: name, price: price, quantity: 1 });
+            }
+            updateCartCounter();
+            alert(`تم إضافة ${name} بنجاح إلى السلة!`);
+        }
+
+        function updateCartCounter() {
+            let totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-counter').innerText = totalCount;
+        }
+
+        function openCartModal() {
+            document.getElementById('cart-modal').style.display = 'flex';
+            renderCartItems();
+        }
+
+        function closeCartModal() {
+            document.getElementById('cart-modal').style.display = 'none';
+        }
+
+        function renderCartItems() {
+            const listContainer = document.getElementById('cart-items-list');
+            if(cart.length === 0) {
+                listContainer.innerHTML = '<p style="text-align: center; color: #888; padding: 20px;">السلة فارغة حالياً!</p>';
+                return;
+            }
+
+            listContainer.innerHTML = ''; 
+            cart.forEach((item, index) => {
+                listContainer.innerHTML += `
+                    <div class="cart-item">
+                        <div>
+                            <strong>${item.name}</strong> <br>
+                            <span style="color:#666;">السعر: $${item.price} × الكمية: ${item.quantity}</span>
+                        </div>
+                        <div>
+                            <span style="font-weight:bold; margin-left:15px;">$${item.price * item.quantity}</span>
+                            <button onclick="removeFromCart(${index})" style="background:none; border:none; color:red; cursor:pointer; font-weight:bold;">❌ حذف</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartCounter();
+            renderCartItems();
+        }
+
+        function generateInvoice() {
+            const name = document.getElementById('client-name').value.trim();
+            const phone = document.getElementById('client-phone').value.trim();
+            const location = document.getElementById('client-location').value.trim();
+
+            if(cart.length === 0) {
+                alert("السلة فارغة!");
+                return;
+            }
+            if(!name || !phone || !location) {
+                alert("من فضلك أكمل بيانات العميل بالكامل لإصدار الفاتورة.");
+                return;
+            }
+
+            closeCartModal();
+
+            document.getElementById('invoice-date').innerText = new Date().toLocaleString('ar-EG');
+            document.getElementById('inv-name').innerText = name;
+            document.getElementById('inv-phone').innerText = phone;
+            document.getElementById('inv-location').innerText = location;
+
+            const tableBody = document.getElementById('invoice-table-body');
+            tableBody.innerHTML = '';
+            let finalTotal = 0;
+
+            cart.forEach(item => {
+                let itemTotal = item.price * item.quantity;
+                finalTotal += itemTotal;
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>$ ${item.price}</td>
+                        <td>${item.quantity}</td>
+                        <td>$ ${itemTotal}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('invoice-total').innerText = finalTotal;
+
+            const invoiceSection = document.getElementById('invoice-section');
+            invoiceSection.style.display = 'block';
+            invoiceSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function closeInvoice() {
+            document.getElementById('invoice-section').style.display = 'none';
+        }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                .then(reg => console.log('PWA Service Worker Registered'))
+                .catch(err => console.error(err));
+            });
+        }
+    </script>
+</body>
+</html>
